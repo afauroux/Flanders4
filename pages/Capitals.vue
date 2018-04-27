@@ -1,5 +1,6 @@
 <template>
-<b-card title="Neighbours" sub-title="Find them neighborinos" class="text-left">
+<b-card title="Capitals" sub-title="know your caps" class="text-left">
+
 
    <b-row align-h="end">
      <b-col cols="1">
@@ -13,11 +14,9 @@
     
     <b-row>
       <b-col>
-        <label for="field1">Find all neighbouring country of <b >{{pickedCountry.countryName}}</b></label>
+        <label for="field1">Find the capital of <b >{{pickedCountry.countryName}}</b></label>
       </b-col>
-      <b-col class="text-right">
-        <span >Good Answers: {{goodAnswers}}/{{Object.keys(pickedCountry.neighbours).length}}</span>
-      </b-col>
+
     </b-row>
    
     <b-row >
@@ -45,11 +44,11 @@
    <b-row class="align-items-center justify-content-center">
       <b-col class="sm-12">
 
-        <div class="mapContainer"><Map class="map" :answers="answers" :picked="pickedCountry.countryCode.toLowerCase()" :pick="pickedCountry.countryCode"/></div>
+        <div class="mapContainer"><Map class="map" :answers="answers" :picked="pickedCountry.countryCode.toLowerCase()"/></div>
       </b-col>
    </b-row >
   <b-modal ref="congrats">
-      {{Win ? 'Bravo ! You are still the best !' : 'Looser ! the answer was: '+this.pickedCountry.neighbours}}
+      {{Win ? 'Bravo ! You are still the best !' : 'Looser ! The good answer was: '+this.pickedCountry.capital}}
   </b-modal>
 
 </b-card>
@@ -72,10 +71,9 @@ export default {
 			data: [],
 			typed: '',
 			selected: null,
-			goodAnswers: 0,
 			answers: [],
-			dismissSecs: 120,
-			countDown: 120,
+			dismissSecs: 10,
+			countDown: 10,
 			countries,
 			seed: Math.random(),
 			Win: false,
@@ -86,9 +84,11 @@ export default {
 			return this.filteredCountries[Math.floor(this.seed * this.filteredCountries.length)];
 		},
 		filteredCountries() {
-			return this.countries.filter(c => {
-				return Object.keys(c.neighbours).length > 0; //we want only country with neighbours
+			let a = this.countries.filter(c => {
+				return c.capital.length > 0 && Object.keys(c.neighbours).length > 0;
 			});
+
+			return a;
 		},
 		countryNames() {
 			return this.filteredCountries.map(c => c.countryName);
@@ -97,10 +97,12 @@ export default {
 
 	methods: {
 		reset() {
-			this.goodAnswers = 0;
 			this.answers = [];
-			this.countDown = 120;
+			this.countDown = 10;
 			this.seed = Math.random();
+		},
+		givup() {
+			this.countDownChanged(0);
 		},
 		countDownChanged(countDown) {
 			this.countDown = countDown;
@@ -108,23 +110,18 @@ export default {
 				this.$refs.congrats.show();
 			}
 		},
-		givup() {
-			this.countDownChanged(0);
-		},
 		Submit(val) {
 			console.log('submit', val);
 			if (!val) return; // avoid null trigger
-			console.log(this.pickedCountry.neighbours);
+			console.log(this.pickedCountry.capital);
 			this.answers.unshift({
 				id: this.goodAnswers,
 				name: val,
-				valid: this.pickedCountry.neighbours.indexOf(val) > -1,
+				valid: this.pickedCountry.capital == val,
 			});
-			if (this.pickedCountry.neighbours.indexOf(val) > -1) {
-				this.goodAnswers++;
-			}
+
 			this.name = '';
-			if (this.goodAnswers == Object.keys(this.pickedCountry.neighbours).length) {
+			if (this.pickedCountry.capital == val) {
 				this.Win = true;
 				this.countDown = 0;
 				this.$refs.congrats.show();
@@ -147,9 +144,6 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-}
-button {
-	margin: 5px;
 }
 button:active {
 	transform: translateY(2px);
