@@ -1,13 +1,29 @@
 <template>
-  <section class="container">
-    <div>
-     
-      <h1 class="title">
-        Flanders
-      </h1>
+  <b-container  flow>
+
+  
+ 
+      <h3 class="text-center">
+        Welcome to Flanders Application. 
+      </h3>
+
+
+      <p class="text-center">A website made for Magda By her beloved Tony</p>
+      <br>
+      <br>
+       <h4 class="text-center">
+        Heres Google Earth View for watching nice pics and browsing earth, enjoy !
+      </h4>
+      <br>
+
       
-    </div>
-  </section>
+     
+      
+      <iframe width="100%" height="500" src="https://earth.google.com"
+       frameborder="0"></iframe>
+     
+      
+  </b-container>
 </template>
 
 <script>
@@ -18,7 +34,7 @@ export default {
 }
 </script>
 
-<style>
+<!--style>
 .container
 {
   min-height: 100vh;
@@ -48,4 +64,4 @@ export default {
 {
   padding-top: 15px;
 }
-</style>
+</style-->

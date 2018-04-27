@@ -450,7 +450,7 @@ export default {
 		picked: {
 			type: String,
 			required: false,
-			default: 'pl',
+			default: 'default',
 		},
 		answers: {
 			type: Array,

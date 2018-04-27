@@ -1,5 +1,5 @@
 <template>
-<b-card title="Capitals" sub-title="know your caps" class="text-left">
+<b-card title="Continent" sub-title="counting cont's" class="text-left">
 
 
    <b-row align-h="end">
@@ -14,14 +14,14 @@
     
     <b-row>
       <b-col>
-        <label for="field1">Find the capital of <b >{{pickedCountry.countryName}}</b></label>
+        <label for="field1">Find all the countries of <b >{{pickedContinent}}</b></label>
       </b-col>
 
     </b-row>
    
     <b-row >
       <b-col class="sm-12">
-        <AutoComplete @submit="Submit" :items="capitals"/>
+        <AutoComplete @submit="Submit" :items="countryNames"/>
       </b-col>
     </b-row>
     <b-row >
@@ -44,11 +44,11 @@
    <b-row class="align-items-center justify-content-center">
       <b-col class="sm-12">
 
-        <div class="mapContainer"><Map class="map" :answers="answers" :picked="pickedCountry.countryCode.toLowerCase()"/></div>
+        <div class="mapContainer"><Map class="map" :answers="answers" /></div>
       </b-col>
    </b-row >
   <b-modal ref="congrats">
-      {{Win ? 'Bravo ! You are still the best !' : 'Looser ! The good answer was: '+this.pickedCountry.capital}}
+      {{Win ? 'Bravo ! You are still the best !' : 'Looser ! the answer was: '}}<span v-html="prettyfy(this.solution)"></span>
   </b-modal>
 
 </b-card>
@@ -72,20 +72,21 @@ export default {
 			typed: '',
 			selected: null,
 			answers: [],
-			dismissSecs: 10,
-			countDown: 10,
+			dismissSecs: 300,
+			countDown: 300,
 			countries,
 			seed: Math.random(),
 			Win: false,
+			goodAnswers:0
 		};
 	},
 	computed: {
-		pickedCountry() {
-			return this.filteredCountries[Math.floor(this.seed * this.filteredCountries.length)];
+		pickedContinent() {
+			return this.filteredCountries[Math.floor(this.seed * this.filteredCountries.length)].continent;
 		},
 		filteredCountries() {
 			let a = this.countries.filter(c => {
-				return c.capital.length > 0 && Object.keys(c.neighbours).length > 0;
+				return c.continent.length > 0 
 			});
 
 			return a;
@@ -93,12 +94,26 @@ export default {
 		countryNames() {
 			return this.filteredCountries.map(c => c.countryName);
 		},
-		capitals() {
-			return this.filteredCountries.map(c => c.capital);
+		countryContinents(){
+			return  this.filteredCountries.reduce(function(map, obj) {
+					map[obj.countryName] = obj.continent;
+					return map;
+			}, {});
+			
 		},
+		solution(){
+			return  this.filteredCountries
+			.filter( c=>{
+				return c.continent == this.pickedContinent
+			}).map(c=> c.countryName);
+			
+		}
 	},
 
 	methods: {
+		prettyfy(arr){
+			return arr.join('<br>')
+		},
 		reset() {
 			this.answers = [];
 			this.countDown = 10;
@@ -116,15 +131,18 @@ export default {
 		Submit(val) {
 			console.log('submit', val);
 			if (!val) return; // avoid null trigger
-			console.log(this.pickedCountry.capital);
+			console.log(this.solution)
 			this.answers.unshift({
-				id: this.goodAnswers,
+				id: this.answers.length,
 				name: val,
-				valid: this.pickedCountry.capital == val,
+				valid: this.countryContinents[val] == this.pickedContinent,
 			});
 
 			this.name = '';
-			if (this.pickedCountry.capital == val) {
+			if (this.answers[0].valid) {
+				this.goodAnswers++;
+			}
+			if(this.goodAnswers == this.solution.length){
 				this.Win = true;
 				this.countDown = 0;
 				this.$refs.congrats.show();

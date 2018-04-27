@@ -3,6 +3,9 @@
 </template>
 
  <script>
+
+import countries from '@/static/countries.json';
+
 export default {
 	props: {
 		answers: {
@@ -27,19 +30,25 @@ export default {
 		},
 	},
 	computed: {
+		countryCodes(){
+			return  countries.reduce(function(map, obj) {
+					map[obj.countryName] = obj.countryCode;
+					return map;
+			}, {});
+			
+		},
 		isAnswer() {
 			let isAnswer = false;
 			let isMistake = false;
 			for (let i in this.answers) {
-				console.log(
-					this.answers[i].name.toLowerCase().substring(0, 2),
-					this.name.toLowerCase().substring(0, 2)
-				);
-				if (this.answers[i].name.toLowerCase().substring(0, 2) == this.name.toLowerCase().substring(0, 2)) {
-					if (this.answers[i].valid) {
-						isAnswer = true;
-					} else {
-						isMistake = true;
+				let code = this.countryCodes[this.answers[i].name]
+				if(code){
+					if (code.toLowerCase().substring(0, 2) == this.name.toLowerCase().substring(0, 2)) {
+						if (this.answers[i].valid) {
+							isAnswer = true;
+						} else {
+							isMistake = true;
+						}
 					}
 				}
 			}
@@ -47,6 +56,9 @@ export default {
 			return [isAnswer, isMistake];
 		},
 	},
+	method:{
+		
+	}
 };
 </script>
  

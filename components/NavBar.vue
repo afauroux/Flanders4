@@ -3,7 +3,7 @@
 
  
 
-  <b-navbar-brand  href="/">
+  <b-navbar-brand to="/">
   <b>Flanders</b></b-navbar-brand>
   <b-navbar-toggle target="nav_dropdown_collapse"></b-navbar-toggle>
   <b-collapse is-nav id="nav_dropdown_collapse">
@@ -11,6 +11,7 @@
     <b-navbar-nav>
       <b-nav-item to="Neighbours">Neighbours</b-nav-item>
       <b-nav-item to="Capitals">Capitals</b-nav-item>
+       <b-nav-item to="Continent">Continent</b-nav-item>
       <b-nav-item to="Cheat">CheatSheet</b-nav-item>
     </b-navbar-nav>
 
