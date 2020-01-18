@@ -2,7 +2,6 @@
   <b-container  flow>
 
   
- 
       <h3 class="text-center">
         Welcome to Flanders Application. 
       </h3>
@@ -27,11 +26,7 @@
 </template>
 
 <script>
-
-
-export default {
-
-}
+export default {};
 </script>
 
 <!--style>
