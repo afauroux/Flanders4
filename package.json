@@ -13,7 +13,7 @@
   "dependencies": {
     "bootstrap": "^4.1.0",
     "bootstrap-vue": "^1.5.1",
-    "nuxt": "^1.0.0",
+    "nuxt": "^3.0.0",
     "paypal": "^1.0.1"
   },
   "devDependencies": {
